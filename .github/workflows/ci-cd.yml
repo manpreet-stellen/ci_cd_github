@@ -21,7 +21,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - name: Debug: print event info
+      - name: 'Debug - print event info'
         run: |
           echo "Event: $GITHUB_EVENT_NAME"
           echo "Ref: $GITHUB_REF"
@@ -80,7 +80,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }},ghcr.io/${{ github.repository }}:latest
 
-      - name: Debug: check Render secrets availability
+      - name: 'Debug - check Render secrets availability'
         if: always()
         run: |
           if [ -n "${{ secrets.RENDER_SERVICE_ID }}" ] && [ -n "${{ secrets.RENDER_API_KEY }}" ]; then
@@ -89,7 +89,7 @@ jobs:
             echo "Render secrets NOT set or empty. Skipping remote deploy step."
           fi
 
-      - name: Optional: Trigger Render deploy
+      - name: 'Optional - Trigger Render deploy'
         if: ${{ secrets.RENDER_SERVICE_ID != '' && secrets.RENDER_API_KEY != '' }}
         env:
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
