@@ -1,0 +1,13 @@
+# Docker ignore for building image
+vendor
+node_modules
+.env
+.git
+npm-debug.log
+.DS_Store
+/.vscode
+/.idea
+storage/*.key
+storage/app/*
+storage/framework/cache/data
+/public/storage
