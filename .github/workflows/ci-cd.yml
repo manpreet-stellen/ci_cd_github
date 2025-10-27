@@ -10,6 +10,7 @@ on:
     branches: ["main"]
   push:
     branches: ["main"]
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -20,6 +21,12 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
+      - name: Debug: print event info
+        run: |
+          echo "Event: $GITHUB_EVENT_NAME"
+          echo "Ref: $GITHUB_REF"
+          echo "SHA: $GITHUB_SHA"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -47,7 +54,7 @@ jobs:
     name: Build and push Docker image
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
