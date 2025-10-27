@@ -80,31 +80,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }},ghcr.io/${{ github.repository }}:latest
 
-      - name: 'Debug - check Render secrets availability'
-        if: always()
+      # Note: Using Render Auto-Deploy - Render will automatically deploy when changes are pushed to main
+      - name: 'Build succeeded'
         run: |
-          if [[ -n "${{ secrets.RENDER_SERVICE_ID || '' }}" ]] && [[ -n "${{ secrets.RENDER_API_KEY || '' }}" ]]; then
-            echo "Render secrets present: RENDER_SERVICE_ID is set, RENDER_API_KEY is set"
-          else
-            echo "Render secrets NOT set or empty. Skipping remote deploy step."
-          fi
-
-      - name: 'Optional - Trigger Render deploy'
-        if: "${{ secrets.RENDER_SERVICE_ID != '' && secrets.RENDER_API_KEY != '' }}"
-        env:
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          COMMIT: ${{ github.sha }}
-        run: |
-          echo "Triggering Render deploy for service $RENDER_SERVICE_ID"
-          HTTP_CODE=$(curl -s -o /tmp/render_resp -w "%{http_code}" -X POST "https://api.render.com/v1/services/${RENDER_SERVICE_ID}/deploys" \
-            -H "Authorization: Bearer ${RENDER_API_KEY}" \
-            -H "Content-Type: application/json" \
-            -d "{\"clearCache\":true,\"commitHash\":\"${COMMIT}\"}")
-          echo "Render API HTTP code: $HTTP_CODE"
-          echo "Response body:" 
-          cat /tmp/render_resp || true
-          if [ "$HTTP_CODE" -ge 400 ]; then
-            echo "Render deploy failed with HTTP code $HTTP_CODE"
-            exit 1
-          fi
+          echo "Build and tests successful. Render will auto-deploy from the main branch."
