@@ -7,5 +7,6 @@
 </head>
 <body>
     <h1>CI/CD Pipeline is working successfully!</h1>
+    <h2>:)</h2>
 </body>
 </html>
