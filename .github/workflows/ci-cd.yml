@@ -47,8 +47,17 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction --no-suggest
 
+      - name: Prepare Test Environment
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate --env=testing
+          php artisan config:clear
+          php artisan cache:clear
+
       - name: Run tests
-        run: composer run test --no-interaction
+        run: |
+          cp .env.testing .env
+          composer run test --no-interaction
 
   build_and_push:
     name: Build and push Docker image
