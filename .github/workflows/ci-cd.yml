@@ -54,7 +54,7 @@ jobs:
     name: Build and push Docker image
     needs: test
     runs-on: ubuntu-latest
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    if: "${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,14 +83,14 @@ jobs:
       - name: 'Debug - check Render secrets availability'
         if: always()
         run: |
-          if [ -n "${{ secrets.RENDER_SERVICE_ID }}" ] && [ -n "${{ secrets.RENDER_API_KEY }}" ]; then
+          if [[ -n "${{ secrets.RENDER_SERVICE_ID || '' }}" ]] && [[ -n "${{ secrets.RENDER_API_KEY || '' }}" ]]; then
             echo "Render secrets present: RENDER_SERVICE_ID is set, RENDER_API_KEY is set"
           else
             echo "Render secrets NOT set or empty. Skipping remote deploy step."
           fi
 
       - name: 'Optional - Trigger Render deploy'
-        if: ${{ secrets.RENDER_SERVICE_ID != '' && secrets.RENDER_API_KEY != '' }}
+        if: "${{ secrets.RENDER_SERVICE_ID != '' && secrets.RENDER_API_KEY != '' }}"
         env:
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
