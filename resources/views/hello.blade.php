@@ -7,6 +7,6 @@
 </head>
 <body>
     <h1>CI/CD Pipeline is working successfully!</h1>
-    <h2>:)</h2>
+    <h2>Have a nice day :)</h2>
 </body>
 </html>
